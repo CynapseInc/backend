@@ -7,22 +7,34 @@ import jakarta.persistence.Id;
 
 import java.time.LocalDate;
 
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import school.sptech.EncantoPersonalizados.repository.UsuarioRepository;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
+
 public class Usuario {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
-    String email;
-    String password;
-    LocalDate dataNasc;
+    private Integer id;
+    private String name;
+    private String email;
+    private String password;
+    private String foto;
+    private String cpf;
+    private LocalDate dataNasc;
+    private String cargo;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
-    public Usuario(LocalDate dataNasc, String password, String email, Integer id) {
-        this.dataNasc = dataNasc;
-        this.password = password;
-        this.email = email;
-        this.id = id;
-    }
 
     public Usuario() {
     }
@@ -33,6 +45,14 @@ public class Usuario {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -51,11 +71,51 @@ public class Usuario {
         this.password = password;
     }
 
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
     public LocalDate getDataNasc() {
         return dataNasc;
     }
 
     public void setDataNasc(LocalDate dataNasc) {
         this.dataNasc = dataNasc;
+    }
+
+    public String getCargo() {
+        return cargo;
+    }
+
+    public void setCargo(String cargo) {
+        this.cargo = cargo;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
