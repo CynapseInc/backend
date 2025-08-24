@@ -6,21 +6,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import java.time.LocalDate;
-
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import school.sptech.EncantoPersonalizados.repository.UsuarioRepository;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-
 public class Usuario {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +23,6 @@ public class Usuario {
     private String cargo;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
 
     public Usuario() {
     }

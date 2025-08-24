@@ -2,25 +2,19 @@ package school.sptech.EncantoPersonalizados.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import school.sptech.EncantoPersonalizados.dto.LoginRequestDTO;
 import school.sptech.EncantoPersonalizados.entities.Usuario;
 import school.sptech.EncantoPersonalizados.service.UsuarioService;
 
 import java.net.URI;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
 
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
-
     private final UsuarioService service;
-
-
-
-
 
     @GetMapping("/{id}")
     public ResponseEntity<Optional<Usuario>> getById(@PathVariable Integer id){
@@ -63,16 +57,20 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
-
-
-
     public UsuarioController(UsuarioService service) {
         this.service = service;
     }
 
     @PostMapping("/login")
-    public boolean login(@RequestParam String email, @RequestParam String password){
-        return service.validateLogin(email, password);
+    public ResponseEntity<String> login(@RequestBody LoginRequestDTO request){
+       boolean validator = service.validateLogin(request.getEmail(), request.getPassword());
+
+        if(!validator){
+            return ResponseEntity.status(404).body("Invalid username or password");
+        }
+
+        return ResponseEntity.ok("Login successfully");
+
     }
 
 }
