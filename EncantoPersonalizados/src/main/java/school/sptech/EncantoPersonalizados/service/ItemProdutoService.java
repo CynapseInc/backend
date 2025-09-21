@@ -30,7 +30,7 @@ public class ItemProdutoService {
     }
 
     public List<ItemProduto> buscarPorPrecoMenorQue(Double preco){
-        List<ItemProduto> itensEncontrados = repository.findByPrecoLessThan(preco).get();
+        List<ItemProduto> itensEncontrados = repository.findByPrecoVendaLessThan(preco).get();
         return itensEncontrados;
     }
 
@@ -41,7 +41,8 @@ public class ItemProdutoService {
         }
         var itemAtual = itemOpt.get();
         itemAtual.setDescricao(itemAtualizado.getDescricao());
-        itemAtual.setPreco(itemAtualizado.getPreco());
+        itemAtual.setPrecoVenda(itemAtualizado.getPrecoVenda());
+        itemAtual.setCustoProducao(itemAtualizado.getCustoProducao());
         itemAtual.setPrazoProducao(itemAtualizado.getPrazoProducao());
         itemAtual.setLargura(itemAtualizado.getLargura());
         itemAtual.setPeso(itemAtualizado.getPeso());

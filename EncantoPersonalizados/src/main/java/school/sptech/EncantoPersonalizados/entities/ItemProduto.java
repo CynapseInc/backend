@@ -13,7 +13,8 @@ public class ItemProduto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String descricao;
-    private Double preco;
+    private Double precoVenda;
+    private Double custoProducao;
     private Integer prazoProducao;
     private Double largura;
     private Double altura;
@@ -22,6 +23,18 @@ public class ItemProduto {
     private String material;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    public void setPrecoVenda(Double precoVenda) {
+        this.precoVenda = precoVenda;
+    }
+
+    public Double getCustoProducao() {
+        return custoProducao;
+    }
+
+    public void setCustoProducao(Double custoProducao) {
+        this.custoProducao = custoProducao;
+    }
 
     public Long getId() {
         return id;
@@ -39,13 +52,11 @@ public class ItemProduto {
         this.descricao = descricao;
     }
 
-    public Double getPreco() {
-        return preco;
+    public Double getPrecoVenda() {
+        return precoVenda;
     }
 
-    public void setPreco(Double preco) {
-        this.preco = preco;
-    }
+
 
     public Integer getPrazoProducao() {
         return prazoProducao;

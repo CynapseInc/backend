@@ -7,5 +7,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ItemProdutoRepository extends JpaRepository<ItemProduto, Long> {
-    Optional<List<ItemProduto>> findByPrecoLessThan(Double preco);
+    Optional<List<ItemProduto>> findByPrecoVendaLessThan(Double preco);
 }
