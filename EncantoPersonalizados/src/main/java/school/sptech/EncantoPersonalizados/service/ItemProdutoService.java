@@ -1,6 +1,9 @@
 package school.sptech.EncantoPersonalizados.service;
 
 import org.springframework.stereotype.Service;
+import school.sptech.EncantoPersonalizados.dto.itemProduto.ItemProdutoMapper;
+import school.sptech.EncantoPersonalizados.dto.itemProduto.ItemProdutoRequestDTO;
+import school.sptech.EncantoPersonalizados.dto.itemProduto.ItemProdutoResponseDTO;
 import school.sptech.EncantoPersonalizados.entities.ItemProduto;
 import school.sptech.EncantoPersonalizados.exceptions.EntidadeConflitoException;
 import school.sptech.EncantoPersonalizados.exceptions.EntidadeNaoEncontradaException;
@@ -19,22 +22,25 @@ public class ItemProdutoService {
         this.repository = repository;
     }
 
-    public ItemProduto cadastrar(ItemProduto itemParaCadastro){
-        itemParaCadastro.setCreatedAt(LocalDateTime.now());
-        ItemProduto itemRegistrado = repository.save(itemParaCadastro);
-        return itemRegistrado;
+    public ItemProdutoResponseDTO cadastrar(ItemProdutoRequestDTO itemParaCadastro){
+        ItemProduto entity = ItemProdutoMapper.toEntity(itemParaCadastro);
+        entity.setCreatedAt(LocalDateTime.now());
+        ItemProduto itemRegistrado = repository.save(entity);
+        return ItemProdutoMapper.toDto(itemRegistrado);
     }
 
-    public List<ItemProduto> listar(){
-        return repository.findAll();
+    public List<ItemProdutoResponseDTO> listar(){
+        return  ItemProdutoMapper.toDto(repository.findAll());
+
     }
 
-    public List<ItemProduto> buscarPorPrecoMenorQue(Double preco){
+    public List<ItemProdutoResponseDTO> buscarPorPrecoMenorQue(Double preco){
         List<ItemProduto> itensEncontrados = repository.findByPrecoVendaLessThan(preco).get();
-        return itensEncontrados;
+        List<ItemProdutoResponseDTO> dtos = ItemProdutoMapper.toDto(itensEncontrados);
+        return dtos;
     }
 
-    public ItemProduto update(Long id, ItemProduto itemAtualizado){
+    public ItemProdutoResponseDTO update(Long id, ItemProduto itemAtualizado){
         Optional<ItemProduto> itemOpt = repository.findById(id);
         if (!itemOpt.isPresent()) {
             throw new EntidadeNaoEncontradaException("Item não encontrado!");
@@ -50,7 +56,8 @@ public class ItemProdutoService {
         itemAtual.setMaterial(itemAtualizado.getMaterial());
         itemAtual.setUpdatedAt(LocalDateTime.now());
         repository.save(itemAtual);
-        return itemAtual;
+        ItemProdutoResponseDTO dto = ItemProdutoMapper.toDto(itemAtual);
+        return dto;
     }
 
     public void delete(Long id){
