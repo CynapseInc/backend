@@ -112,8 +112,11 @@ public class UsuarioController {
             @ApiResponse(responseCode = "404", description = "Não encontra o usuário")
     })
     @PatchMapping("/{id}/password")
-    public ResponseEntity<Void> updatePassword(@PathVariable Integer id,
-                                               @RequestBody Usuario usuario){
+    public ResponseEntity<Void> updatePassword(
+            @Parameter(description = "Id do usuário", example = "1")
+            @PathVariable Integer id,
+
+            @RequestBody Usuario usuario){
         if(service.updatePassword(usuario, id)){
             return ResponseEntity.status(204).build();
         }
