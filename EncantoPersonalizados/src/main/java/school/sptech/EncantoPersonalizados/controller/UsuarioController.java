@@ -7,14 +7,14 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.models.media.UUIDSchema;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import school.sptech.EncantoPersonalizados.dto.usuario.LoginRequestDTO;
-import school.sptech.EncantoPersonalizados.dto.usuario.UsuarioRequestDTO;
-import school.sptech.EncantoPersonalizados.dto.usuario.UsuarioResponseDTO;
+import school.sptech.EncantoPersonalizados.dto.usuario.*;
 import school.sptech.EncantoPersonalizados.entities.Usuario;
 import school.sptech.EncantoPersonalizados.service.UsuarioService;
-
 
 import java.util.List;
 
@@ -23,6 +23,7 @@ import java.util.List;
 public class UsuarioController {
 
     private final UsuarioService service;
+    private final UsuarioService usuarioService;
 
     @Operation(description = "Lista usuário por ID")
     @ApiResponses({
@@ -49,6 +50,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "204", description = "Não encontrou usuários")
     })
     @GetMapping
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<UsuarioResponseDTO>> get(){
         List<UsuarioResponseDTO> usuarios = service.get();
         if(!usuarios.isEmpty()){
@@ -57,15 +59,19 @@ public class UsuarioController {
         return ResponseEntity.status(204).build();
     }
 
-
     @Operation
     @ApiResponse(responseCode = "201", description = "Cria um usuário",
     content = @Content(mediaType = "application/json"))
     @PostMapping
-    public ResponseEntity<UsuarioResponseDTO> store(@RequestBody UsuarioRequestDTO usuario){
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<UsuarioResponseDTO> store(@RequestBody @Valid UsuarioRequestDTO usuarioRequestDTO){
+
+        Usuario usuario = UsuarioMapper.toEntity(usuarioRequestDTO);
 
         UsuarioResponseDTO responseDto = service.store(usuario);
+
         return ResponseEntity.status(201).body(responseDto);
+
     }
 
     @Operation(description = "Atualizar usuário")
@@ -114,8 +120,9 @@ public class UsuarioController {
         return ResponseEntity.status(404).build();
     }
 
-    public UsuarioController(UsuarioService service) {
+    public UsuarioController(UsuarioService service, UsuarioService usuarioService) {
         this.service = service;
+        this.usuarioService = usuarioService;
     }
 
     @Operation(description = "Autenticar usuário")
@@ -124,14 +131,17 @@ public class UsuarioController {
             @ApiResponse(responseCode = "404", description = "Falha ao autenticar")
     })
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequestDTO request){
-        boolean validator = service.validateLogin(request.getEmail(), request.getPassword());
+    public ResponseEntity<UserTokenDTO> login(@RequestBody LoginRequestDTO loginRequestDTO){
 
-        if(!validator){
-            return ResponseEntity.status(404).body("Invalid username or password");
+        final Usuario usuario = UsuarioMapper.of(loginRequestDTO);
+        UserTokenDTO userTokenDTO = service.validateLogin(usuario.getEmail(), usuario.getPassword());
+
+        if(userTokenDTO == null){
+            return ResponseEntity.status(404).build();
         }
 
-        return ResponseEntity.status(200).body("Login com sucesso");
+        return ResponseEntity.status(200).body(userTokenDTO);
+
     }
 
 }
