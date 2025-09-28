@@ -1,4 +1,4 @@
-package school.sptech.EncantoPersonalizados.dto;
+package school.sptech.EncantoPersonalizados.dto.usuario;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -8,10 +8,6 @@ public class LoginRequestDTO {
     private String email;
     @Schema(description = "Senha do usuário", example = "111111@A")
     private String password;
-
-    public LoginRequestDTO() {
-
-    }
 
     public String getEmail() {
         return email;

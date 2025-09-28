@@ -1,4 +1,4 @@
-package school.sptech.EncantoPersonalizados.dto;
+package school.sptech.EncantoPersonalizados.dto.usuario;
 
 public class UserTokenDTO {
     private Integer userId;

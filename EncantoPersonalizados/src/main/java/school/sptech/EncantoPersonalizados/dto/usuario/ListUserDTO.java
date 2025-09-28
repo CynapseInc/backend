@@ -1,4 +1,4 @@
-package school.sptech.EncantoPersonalizados.dto;
+package school.sptech.EncantoPersonalizados.dto.usuario;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

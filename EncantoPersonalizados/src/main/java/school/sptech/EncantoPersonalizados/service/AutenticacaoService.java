@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import school.sptech.EncantoPersonalizados.dto.UserDetailDTO;
+import school.sptech.EncantoPersonalizados.dto.usuario.UserDetailDTO;
 import school.sptech.EncantoPersonalizados.entities.Usuario;
 import school.sptech.EncantoPersonalizados.repository.UsuarioRepository;
 
@@ -13,8 +13,7 @@ import java.util.Optional;
 
 @Service
 public class AutenticacaoService implements UserDetailsService {
-    @Autowired
-    private UsuarioRepository userRepository;
+
     @Autowired
     private UsuarioRepository usuarioRepository;
 
