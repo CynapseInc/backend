@@ -106,45 +106,9 @@ public class UsuarioController {
         };
         return ResponseEntity.status(404).build();
     }
-    @Operation(description = "Atualizar senha do usuário")
-    @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Sucesso ao atualizar"),
-            @ApiResponse(responseCode = "404", description = "Não encontra o usuário")
-    })
-    @PatchMapping("/{id}/password")
-    public ResponseEntity<Void> updatePassword(
-            @Parameter(description = "Id do usuário", example = "1")
-            @PathVariable Integer id,
-
-            @RequestBody Usuario usuario){
-        if(service.updatePassword(usuario, id)){
-            return ResponseEntity.status(204).build();
-        }
-        return ResponseEntity.status(404).build();
-    }
 
     public UsuarioController(UsuarioService service, UsuarioService usuarioService) {
         this.service = service;
         this.usuarioService = usuarioService;
     }
-
-    @Operation(description = "Autenticar usuário")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Sucesso ao autenticar"),
-            @ApiResponse(responseCode = "404", description = "Falha ao autenticar")
-    })
-    @PostMapping("/login")
-    public ResponseEntity<UserTokenDTO> login(@RequestBody LoginRequestDTO loginRequestDTO){
-
-        final Usuario usuario = UsuarioMapper.of(loginRequestDTO);
-        UserTokenDTO userTokenDTO = service.validateLogin(usuario.getEmail(), usuario.getPassword());
-
-        if(userTokenDTO == null){
-            return ResponseEntity.status(404).build();
-        }
-
-        return ResponseEntity.status(200).body(userTokenDTO);
-
-    }
-
 }

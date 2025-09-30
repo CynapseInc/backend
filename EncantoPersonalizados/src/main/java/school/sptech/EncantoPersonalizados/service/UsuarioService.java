@@ -39,32 +39,6 @@ public class UsuarioService {
         this.authenticationManager = authenticationManager;
     }
 
-    public UserTokenDTO validateLogin(String email, String password) {
-
-        Usuario usuario = repository.findUsuarioByEmail(email).orElseThrow(()-> new ResponseStatusException(404, "Email do usuário não cadastrado", null));
-
-        final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(email, password);
-        final Authentication authentication = this.authenticationManager.authenticate(credentials);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        final String token = gerenciadorTokenJwt.generateToken(authentication);
-
-        return UsuarioMapper.of(usuario, token);
-    }
-
-
-    public boolean updatePassword(Usuario usuario, Integer id) {
-        Optional<Usuario> usuarioAtualizar = repository.findById(id);
-        if (usuarioAtualizar.isPresent()) {
-            var usuarioAtual = usuarioAtualizar.get();
-            String encryptedPassword = passwordEncoder.encode(usuario.getPassword());
-            usuarioAtual.setPassword(encryptedPassword);
-            repository.save(usuarioAtual);
-            return true;
-        }
-        return false;
-
-    }
-
     public boolean destroy(Integer id) {
         var user = repository.findById(id);
         if (user.isPresent()) {

@@ -1,19 +1,35 @@
 package school.sptech.EncantoPersonalizados.documentation;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;                // << -- anotação correta
+import io.swagger.v3.oas.annotations.info.Contact;
+import io.swagger.v3.oas.annotations.info.License;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Info;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@OpenAPIDefinition(
+        info = @Info(
+                title = "Projeto Usuários",
+                description = "Exemplo de implementação de JWT com Spring Security",
+                contact = @Contact(
+                        name = "Diego",
+                        url = "https://github.com/BandTec/spring-security-jwt-exemplo",
+                        email = "diego.lima@sptech.school"
+                ),
+                license = @License(name = "UNLICENSED"),
+                version = "1.0.0"
+        )
+)
+@SecurityScheme(
+        name = "Bearer",
+        type = SecuritySchemeType.HTTP,
+        scheme = "bearer",
+        bearerFormat = "JWT"
+)
 public class OpenApiConfig {
-    @Bean
-    public OpenAPI customOpenAPI(){
-        return new OpenAPI()
-                .info(new Info()
-                        .title("Encanto Personalizados API")
-                        .version("v1")
-                        .description("API Rest com intuito de servir a aplicação front end encantos personalizados," +
-                                "Sistema de gestão de pedidos, controle financeiro e catálogo de produtos"));
-    }
+
 }
