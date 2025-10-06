@@ -111,4 +111,15 @@ public class UsuarioController {
         this.service = service;
         this.usuarioService = usuarioService;
     }
+
+    @GetMapping("/ordenadosPorNome")
+    public ResponseEntity<List<Usuario>> getUsuariosOrdenados() {
+        List<Usuario> usuariosOrdenados = usuarioService.getUsuariosComMergeSortPorNome();
+
+        if (usuariosOrdenados.isEmpty()) {
+            return ResponseEntity.status(204).build();
+        }
+
+        return ResponseEntity.status(200).body(usuariosOrdenados);
+    }
 }
