@@ -1,11 +1,9 @@
 package school.sptech.EncantoPersonalizados.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 public class ItemProduto {
@@ -23,6 +21,9 @@ public class ItemProduto {
     private String material;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    @OneToMany(mappedBy = "itemProduto")
+    private List<Produto> produtos;
+
 
     public void setPrecoVenda(Double precoVenda) {
         this.precoVenda = precoVenda;
