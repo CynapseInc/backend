@@ -1,4 +1,7 @@
 package school.sptech.EncantoPersonalizados.repository;
 
-public class FotoProdutoRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import school.sptech.EncantoPersonalizados.entities.FotoProduto;
+
+public interface FotoProdutoRepository extends JpaRepository<FotoProduto, Integer> {
 }

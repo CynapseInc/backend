@@ -6,6 +6,6 @@ import school.sptech.EncantoPersonalizados.entities.ItemProduto;
 import java.util.List;
 import java.util.Optional;
 
-public interface ItemProdutoRepository extends JpaRepository<ItemProduto, Long> {
+public interface ItemProdutoRepository extends JpaRepository<ItemProduto, Integer> {
     Optional<List<ItemProduto>> findByPrecoVendaLessThan(Double preco);
 }

@@ -21,9 +21,26 @@ public class ItemProduto {
     private String material;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Double precoPromocional;
     @OneToMany(mappedBy = "itemProduto")
     private List<Produto> produtos;
 
+
+    public Double getPrecoPromocional() {
+        return precoPromocional;
+    }
+
+    public void setPrecoPromocional(Double precoPromocional) {
+        this.precoPromocional = precoPromocional;
+    }
+
+    public List<Produto> getProdutos() {
+        return produtos;
+    }
+
+    public void setProdutos(List<Produto> produtos) {
+        this.produtos = produtos;
+    }
 
     public void setPrecoVenda(Double precoVenda) {
         this.precoVenda = precoVenda;

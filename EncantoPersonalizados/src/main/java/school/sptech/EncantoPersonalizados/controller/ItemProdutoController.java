@@ -77,7 +77,7 @@ public class ItemProdutoController {
             @RequestBody ItemProduto item,
 
             @Parameter(description = "Id do produto", example = "1", required = true)
-            @PathVariable Long id
+            @PathVariable Integer id
     ){
         ItemProdutoResponseDTO itemAtualizado = service.update(id, item);
         return ResponseEntity.status(200).body(itemAtualizado);
@@ -88,7 +88,7 @@ public class ItemProdutoController {
     @DeleteMapping("/{id}")
      public ResponseEntity<Void> excluirPorId(
             @Parameter(description = "Id do produto", example = "1", required = true)
-            @PathVariable Long id
+            @PathVariable Integer id
     ){
          service.delete(id);
          return ResponseEntity.status(204).build();

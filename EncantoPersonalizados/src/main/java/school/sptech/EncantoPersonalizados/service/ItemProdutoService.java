@@ -22,6 +22,12 @@ public class ItemProdutoService {
         this.repository = repository;
     }
 
+    public ItemProduto findByid(Integer id){
+        Optional<ItemProduto> optionalItemProduto = repository.findById(id);
+        if(optionalItemProduto.isEmpty()) return null;
+        return optionalItemProduto.get();
+    }
+
     public ItemProdutoResponseDTO cadastrar(ItemProdutoRequestDTO itemParaCadastro){
         ItemProduto entity = ItemProdutoMapper.toEntity(itemParaCadastro);
         entity.setCreatedAt(LocalDateTime.now());
@@ -40,7 +46,7 @@ public class ItemProdutoService {
         return dtos;
     }
 
-    public ItemProdutoResponseDTO update(Long id, ItemProduto itemAtualizado){
+    public ItemProdutoResponseDTO update(Integer id, ItemProduto itemAtualizado){
         Optional<ItemProduto> itemOpt = repository.findById(id);
         if (!itemOpt.isPresent()) {
             throw new EntidadeNaoEncontradaException("Item não encontrado!");
@@ -60,7 +66,7 @@ public class ItemProdutoService {
         return dto;
     }
 
-    public void delete(Long id){
+    public void delete(Integer id){
         Optional<ItemProduto> itemOpt = repository.findById(id);
         if (!itemOpt.isPresent()) {
             throw new EntidadeNaoEncontradaException("Item não encontrado!");

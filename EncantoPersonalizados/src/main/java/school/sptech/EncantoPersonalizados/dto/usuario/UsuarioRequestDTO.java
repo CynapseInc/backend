@@ -24,7 +24,7 @@ public record UsuarioRequestDTO(
          @NotBlank
          @Schema(description = "CPF do usuário")
          String cpf,
-         @NotBlank
+
          @Schema(description = "Data de nascimento no formato yyyy-mm-dd")
          LocalDate dataNasc,
          @NotBlank

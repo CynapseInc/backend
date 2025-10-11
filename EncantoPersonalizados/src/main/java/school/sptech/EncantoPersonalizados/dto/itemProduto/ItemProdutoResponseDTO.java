@@ -24,6 +24,8 @@ public record ItemProdutoResponseDTO(
          Double comprimento,
         @Schema(description = "Materia prima do produto ")
          String material,
+        @Schema(description = "Preço promocional caso exista", example = "20,99")
+        Double precoPromocional,
         @Schema(description = "Data da criação do usuário")
         LocalDateTime createdAt,
         @Schema(description = "Data da última atualização do usuário")
