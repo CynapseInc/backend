@@ -50,5 +50,13 @@ public class ClienteController {
         
     }
 
-
+    @Operation(description = "Exclui um cliente por id")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Cliente excluido com sucesso")
+    })
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> remover(@PathVariable Integer id) {
+        clienteService.removerPorId(id);
+        return ResponseEntity.status(204).build();
+    }
 }

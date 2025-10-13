@@ -6,6 +6,7 @@ import school.sptech.EncantoPersonalizados.dto.cliente.ClienteMapper;
 import school.sptech.EncantoPersonalizados.dto.cliente.CreateClienteDTO;
 import school.sptech.EncantoPersonalizados.dto.cliente.ResponseClienteDTO;
 import school.sptech.EncantoPersonalizados.entities.Cliente;
+import school.sptech.EncantoPersonalizados.exceptions.EntidadeNaoEncontradaException;
 import school.sptech.EncantoPersonalizados.repository.ClienteRepository;
 
 import java.util.List;
@@ -30,6 +31,16 @@ public class ClienteService {
         return ClienteMapper.toDto(clientes);
 
 
+    }
+
+    public void removerPorId(Integer id) {
+        if (repository.existsById(id)) {
+            repository.deleteById(id);
+        } else {
+            throw new EntidadeNaoEncontradaException(
+                    "Cliente de id %d não encontrado".formatted(id)
+            );
+        }
     }
 
 }
