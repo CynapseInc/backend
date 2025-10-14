@@ -1,4 +1,4 @@
 package school.sptech.EncantoPersonalizados.repository;
 
-public class EnderecoClienteRepository {
+public interface EnderecoClienteRepository {
 }
