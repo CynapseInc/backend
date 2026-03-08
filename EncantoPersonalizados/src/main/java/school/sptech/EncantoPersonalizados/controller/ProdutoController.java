@@ -16,8 +16,6 @@ import school.sptech.EncantoPersonalizados.dto.fotoProduto.FotoProdutoResponseDT
 import school.sptech.EncantoPersonalizados.dto.produto.ProdutoMapper;
 import school.sptech.EncantoPersonalizados.dto.produto.ProdutoRequestDTO;
 import school.sptech.EncantoPersonalizados.dto.produto.ProdutoResponseDTO;
-import school.sptech.EncantoPersonalizados.dto.usuario.UsuarioResponseDTO;
-import school.sptech.EncantoPersonalizados.entities.FotoProduto;
 import school.sptech.EncantoPersonalizados.entities.Produto;
 import school.sptech.EncantoPersonalizados.exceptions.ProdutoNaoEncontradoException;
 import school.sptech.EncantoPersonalizados.facade.ProdutoFacade;
@@ -26,6 +24,7 @@ import school.sptech.EncantoPersonalizados.service.ProdutoService;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/produtos")
@@ -122,13 +121,12 @@ public class ProdutoController {
             @ApiResponse(responseCode = "404", description = "Não encontrou o produto")
     })
     @PostMapping("/{produtoId}/fotos")
-    public ResponseEntity<FotoProdutoResponseDTO> uploadFoto(
+    public CompletableFuture<ResponseEntity<FotoProdutoResponseDTO>> uploadFoto(
             @PathVariable Integer produtoId,
             @RequestParam("foto") MultipartFile file
     ) throws IOException {
-        FotoProduto foto = fotoProdutoService.store(produtoId, file);
-        FotoProdutoResponseDTO dto = FotoProdutoMapper.toDto(foto);
-        return ResponseEntity.status(201).body(dto);
+        return fotoProdutoService.store(produtoId, file)
+                .thenApply(foto -> ResponseEntity.status(201).body(FotoProdutoMapper.toDto(foto)));
     }
 
     @Operation(description = "Excluir foto do produto")
@@ -137,9 +135,9 @@ public class ProdutoController {
             @ApiResponse(responseCode = "404", description = "Não encontrou a foto do produto")
     })
     @DeleteMapping("/fotos/{fotoId}")
-    public ResponseEntity<Void> deleteFoto(@PathVariable Integer fotoId) throws IOException {
-        fotoProdutoService.deletarFoto(fotoId);
-        return ResponseEntity.noContent().build();
+    public CompletableFuture<ResponseEntity<Void>> deleteFoto(@PathVariable Integer fotoId) {
+        return fotoProdutoService.deletarFoto(fotoId)
+                .thenApply(v -> ResponseEntity.<Void>noContent().build());
     }
 
 
