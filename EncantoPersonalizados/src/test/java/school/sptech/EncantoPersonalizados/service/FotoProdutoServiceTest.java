@@ -7,13 +7,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.multipart.MultipartFile;
-import school.sptech.EncantoPersonalizados.clean.core.application.usecase.DeletarFotoUseCase;
-import school.sptech.EncantoPersonalizados.clean.core.application.usecase.SalvarFotoUseCase;
-import school.sptech.EncantoPersonalizados.clean.core.domain.FotoArquivo;
-import school.sptech.EncantoPersonalizados.entities.FotoProduto;
-import school.sptech.EncantoPersonalizados.entities.Produto;
-import school.sptech.EncantoPersonalizados.exceptions.ProdutoNaoEncontradoException;
-import school.sptech.EncantoPersonalizados.repository.FotoProdutoRepository;
+import school.sptech.EncantoPersonalizados.core.application.gateway.FotoArquivoStorageGateway;
+import school.sptech.EncantoPersonalizados.core.application.gateway.FotoProdutoGateway;
+import school.sptech.EncantoPersonalizados.core.application.gateway.ProdutoGateway;
+import school.sptech.EncantoPersonalizados.core.application.usecase.fotoProduto.ArmazenarFotoProdutoUseCaseImpl;
+import school.sptech.EncantoPersonalizados.core.application.usecase.fotoProduto.DeletarFotoUseCase;
+import school.sptech.EncantoPersonalizados.core.application.usecase.fotoProduto.SalvarFotoUseCase;
+import school.sptech.EncantoPersonalizados.core.domain.FotoArquivo;
+import school.sptech.EncantoPersonalizados.core.domain.FotoProduto;
+import school.sptech.EncantoPersonalizados.core.domain.Produto;
+import school.sptech.EncantoPersonalizados.core.domain.exception.ProdutoNaoEncontradoException;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -24,13 +27,16 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class FotoProdutoServiceTest {
+class ArmazenarFotoProdutoUseCaseImplTest {
 
     @Mock
-    FotoProdutoRepository repository;
+    FotoProdutoGateway repository;
 
     @Mock
-    ProdutoService produtoService;
+    ProdutoGateway produtoGateway;
+
+    @Mock
+    FotoArquivoStorageGateway fotoArquivoStorageGateway;
 
     @Mock
     SalvarFotoUseCase salvarFotoUseCase;
@@ -39,7 +45,7 @@ class FotoProdutoServiceTest {
     DeletarFotoUseCase deletarFotoUseCase;
 
     @InjectMocks
-    FotoProdutoService service;
+    ArmazenarFotoProdutoUseCaseImpl service;
 
     @Test
     @DisplayName("Deve lançar exceção quando cadastrar foto de produto e o produto não existir")
@@ -65,7 +71,7 @@ class FotoProdutoServiceTest {
         when(file.getOriginalFilename()).thenReturn("imagem.jpg");
         when(file.getBytes()).thenReturn("conteudo".getBytes());
 
-        when(produtoService.findById(produtoId)).thenReturn(produto);
+        when(produtoGateway.findById(produtoId)).thenReturn(Optional.of(produto));
 
         FotoArquivo fotoArquivo = new FotoArquivo(
                 "/uploads/produtos/" + produtoId + "/uuid-imagem.jpg",
@@ -73,7 +79,7 @@ class FotoProdutoServiceTest {
                 produtoId
         );
 
-        when(salvarFotoUseCase.executar(eq(produtoId), anyString(), any(byte[].class)))
+        when(fotoArquivoStorageGateway.salvar(eq(produtoId), anyString(), any(byte[].class)))
                 .thenReturn(CompletableFuture.completedFuture(fotoArquivo));
 
         FotoProduto fotoSalva = new FotoProduto();
@@ -88,7 +94,7 @@ class FotoProdutoServiceTest {
         assertNotNull(resultado);
         assertNotNull(resultado.getCreatedAt());
         assertTrue(resultado.getFoto().startsWith("/uploads/produtos/" + produtoId + "/"));
-        verify(salvarFotoUseCase, times(1)).executar(eq(produtoId), anyString(), any(byte[].class));
+        verify(fotoArquivoStorageGateway, times(1)).salvar(eq(produtoId), anyString(), any(byte[].class));
         verify(repository, times(1)).save(any(FotoProduto.class));
     }
 
@@ -113,7 +119,7 @@ class FotoProdutoServiceTest {
         foto.setFoto("/uploads/produtos/1/uuid-imagem.jpg");
 
         when(repository.findById(fotoId)).thenReturn(Optional.of(foto));
-        when(deletarFotoUseCase.executar(foto.getFoto()))
+        when(fotoArquivoStorageGateway.deletar(foto.getFoto()))
                 .thenReturn(CompletableFuture.completedFuture(null));
 
         service.deletarFoto(fotoId).join();
