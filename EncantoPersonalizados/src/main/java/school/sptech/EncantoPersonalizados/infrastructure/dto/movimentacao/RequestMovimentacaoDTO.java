@@ -1,6 +1,7 @@
 package school.sptech.EncantoPersonalizados.infrastructure.dto.movimentacao;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
@@ -8,15 +9,15 @@ public record RequestMovimentacaoDTO(
         @NotBlank
         String tipo,
         String descricao,
-        @NotBlank
+        @NotNull
         Double valor,
         @NotBlank
         String statusPagamento,
-        @NotBlank
+        @NotNull
         LocalDate dataVencimento,
         LocalDate dataPagamento,
-        @NotBlank
+        @NotNull
         Integer idContraparte,
-        @NotBlank
+        @NotNull
         Integer idCategoriaMovimentacao
 ) {}
