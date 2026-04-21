@@ -2,12 +2,7 @@ package school.sptech.EncantoPersonalizados.infrastructure.adapter;
 
 import org.springframework.stereotype.Repository;
 import school.sptech.EncantoPersonalizados.core.application.gateway.DashboardGestaoPedidosGateway;
-import school.sptech.EncantoPersonalizados.core.domain.dashboard.DashboardFiltroProdutoItem;
-import school.sptech.EncantoPersonalizados.core.domain.dashboard.DashboardLeadtimeEtapa;
-import school.sptech.EncantoPersonalizados.core.domain.dashboard.DashboardLeadtimeFuncionario;
-import school.sptech.EncantoPersonalizados.core.domain.dashboard.DashboardLeadtimeMensal;
-import school.sptech.EncantoPersonalizados.core.domain.dashboard.DashboardRetrabalhoQuantidadeMes;
-import school.sptech.EncantoPersonalizados.core.domain.dashboard.DashboardTipoPedido;
+import school.sptech.EncantoPersonalizados.core.domain.dashboard.*;
 import school.sptech.EncantoPersonalizados.infrastructure.persistence.repository.dashboard.*;
 
 import java.time.LocalDate;
@@ -24,6 +19,9 @@ public class DashboardGestaoPedidosRepositoryAdapter implements DashboardGestaoP
     private final DashboardLeadtimeMensalRepository leadtimeMensalRepo;
     private final DashboardFiltroProdutoItemRepository filtroProdutoItemRepo;
     private final DashboardTipoPedidoRepository tipoPedidoRepo;
+    private final DashboardPedidosMesRepository pedidosMesRepo;
+    private final DashboardCargaTrabalhoRepository cargaTrabalhoRepo;
+    private final DashboardPedidoSemAtualizacaoRepository pedidoSemAtualizacaoRepo;
 
     public DashboardGestaoPedidosRepositoryAdapter(
             DashboardLeadtimeFuncionarioRepository leadtimeFuncionarioRepo,
@@ -31,13 +29,19 @@ public class DashboardGestaoPedidosRepositoryAdapter implements DashboardGestaoP
             DashboardLeadtimeEtapaRepository leadtimeEtapaRepo,
             DashboardLeadtimeMensalRepository leadtimeMensalRepo,
             DashboardFiltroProdutoItemRepository filtroProdutoItemRepo,
-            DashboardTipoPedidoRepository tipoPedidoRepo) {
+            DashboardTipoPedidoRepository tipoPedidoRepo,
+            DashboardPedidosMesRepository pedidosMesRepo,
+            DashboardCargaTrabalhoRepository cargaTrabalhoRepo,
+            DashboardPedidoSemAtualizacaoRepository pedidoSemAtualizacaoRepo) {
         this.leadtimeFuncionarioRepo = leadtimeFuncionarioRepo;
         this.retrabalhoQuantidadeMesRepo = retrabalhoQuantidadeMesRepo;
         this.leadtimeEtapaRepo = leadtimeEtapaRepo;
         this.leadtimeMensalRepo = leadtimeMensalRepo;
         this.filtroProdutoItemRepo = filtroProdutoItemRepo;
         this.tipoPedidoRepo = tipoPedidoRepo;
+        this.pedidosMesRepo = pedidosMesRepo;
+        this.cargaTrabalhoRepo = cargaTrabalhoRepo;
+        this.pedidoSemAtualizacaoRepo = pedidoSemAtualizacaoRepo;
     }
 
     @Override
@@ -61,6 +65,15 @@ public class DashboardGestaoPedidosRepositoryAdapter implements DashboardGestaoP
 
         List<DashboardTipoPedido> tipos = tipoPedidoRepo.findAll();
         response.put("tiposPedido", tipos);
+
+        List<DashboardPedidosMes> pedidosPorMes = pedidosMesRepo.findAllOrderByMesAsc();
+        response.put("pedidosPorMes", pedidosPorMes);
+
+        List<DashboardCargaTrabalho> cargaTrabalho = cargaTrabalhoRepo.findAllOrderByEmAndamentoDesc();
+        response.put("cargaTrabalho", cargaTrabalho);
+
+        List<DashboardPedidoSemAtualizacao> semAtualizacao = pedidoSemAtualizacaoRepo.findAll();
+        response.put("pedidosSemAtualizacao", semAtualizacao);
 
         return response;
     }

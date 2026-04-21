@@ -30,5 +30,5 @@ public class DashboardGestaoPedidosController {
             @RequestParam("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim
     ) {
         return ResponseEntity.status(200).body(buscarDashboardGestaoPedidosUseCase.getDashboard(inicio, fim));
-    }
+        }
 }
