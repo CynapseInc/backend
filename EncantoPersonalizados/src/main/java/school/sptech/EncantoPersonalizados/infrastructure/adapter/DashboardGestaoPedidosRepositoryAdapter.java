@@ -45,34 +45,34 @@ public class DashboardGestaoPedidosRepositoryAdapter implements DashboardGestaoP
     }
 
     @Override
-    public Map<String, Object> getDashboardData(LocalDate inicio, LocalDate fim) {
+    public Map<String, Object> getDashboardData(LocalDate inicio, LocalDate fim, String tipoPedido, Long produtoId, Long temaId) {
         Map<String, Object> response = new HashMap<>();
 
-        List<DashboardLeadtimeFuncionario> ltPorFuncionario = leadtimeFuncionarioRepo.findAllOrderByLeadTimeDesc();
+        List<DashboardLeadtimeFuncionario> ltPorFuncionario = leadtimeFuncionarioRepo.findAllFiltered(tipoPedido, produtoId, temaId);
         response.put("leadtimePorFuncionario", ltPorFuncionario);
 
-        List<DashboardRetrabalhoQuantidadeMes> retrabalhoPorMes = retrabalhoQuantidadeMesRepo.findAllOrderByMesDesc();
+        List<DashboardRetrabalhoQuantidadeMes> retrabalhoPorMes = retrabalhoQuantidadeMesRepo.findAllFiltered(produtoId, temaId);
         response.put("retrabalhoQuantidadePorMes", retrabalhoPorMes);
 
-        List<DashboardLeadtimeEtapa> ltPorEtapa = leadtimeEtapaRepo.findAllOrderByLeadTimeDesc();
+        List<DashboardLeadtimeEtapa> ltPorEtapa = leadtimeEtapaRepo.findAllFiltered(tipoPedido, produtoId, temaId);
         response.put("leadtimePorEtapa", ltPorEtapa);
 
-        List<DashboardLeadtimeMensal> ltMensal = leadtimeMensalRepo.findAllOrderByMesDesc();
+        List<DashboardLeadtimeMensal> ltMensal = leadtimeMensalRepo.findAllFiltered(tipoPedido, produtoId, temaId);
         response.put("leadtimeMensal", ltMensal);
 
-        List<DashboardFiltroProdutoItem> produtosMaisPedidos = filtroProdutoItemRepo.findAllOrderByQtdProdDesc();
+        List<DashboardFiltroProdutoItem> produtosMaisPedidos = filtroProdutoItemRepo.findAllFiltered(tipoPedido, produtoId, temaId);
         response.put("produtosMaisPedidos", produtosMaisPedidos);
 
-        List<DashboardTipoPedido> tipos = tipoPedidoRepo.findAll();
+        List<DashboardTipoPedido> tipos = tipoPedidoRepo.findAllFiltered(tipoPedido, produtoId, temaId);
         response.put("tiposPedido", tipos);
 
-        List<DashboardPedidosMes> pedidosPorMes = pedidosMesRepo.findAllOrderByMesAsc();
+        List<DashboardPedidosMes> pedidosPorMes = pedidosMesRepo.findAllFiltered(tipoPedido, produtoId, temaId);
         response.put("pedidosPorMes", pedidosPorMes);
 
-        List<DashboardCargaTrabalho> cargaTrabalho = cargaTrabalhoRepo.findAllOrderByEmAndamentoDesc();
+        List<DashboardCargaTrabalho> cargaTrabalho = cargaTrabalhoRepo.findAllFiltered(tipoPedido, produtoId, temaId);
         response.put("cargaTrabalho", cargaTrabalho);
 
-        List<DashboardPedidoSemAtualizacao> semAtualizacao = pedidoSemAtualizacaoRepo.findAll();
+        List<DashboardPedidoSemAtualizacao> semAtualizacao = pedidoSemAtualizacaoRepo.findAllFiltered(tipoPedido, produtoId, temaId);
         response.put("pedidosSemAtualizacao", semAtualizacao);
 
         return response;

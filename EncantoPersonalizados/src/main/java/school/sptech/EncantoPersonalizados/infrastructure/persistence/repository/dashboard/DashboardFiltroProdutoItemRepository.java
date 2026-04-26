@@ -2,12 +2,31 @@ package school.sptech.EncantoPersonalizados.infrastructure.persistence.repositor
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import school.sptech.EncantoPersonalizados.core.domain.dashboard.DashboardFiltroProdutoItem;
 
 import java.util.List;
 
 public interface DashboardFiltroProdutoItemRepository extends JpaRepository<DashboardFiltroProdutoItem, Long> {
 
-    @Query("SELECT d FROM DashboardFiltroProdutoItem d ORDER BY d.qtdProd DESC")
-    List<DashboardFiltroProdutoItem> findAllOrderByQtdProdDesc();
+    @Query(value = """
+            SELECT p.id AS id,
+                   pp.produto_id AS produto_id,
+                   COALESCE(prod.item_produto_id, 0) AS qtd_prod
+            FROM pedido p
+            LEFT JOIN produto_pedido pp ON pp.pedido_id = p.id
+            LEFT JOIN produto prod ON prod.id = pp.produto_id
+            LEFT JOIN vw_tipo_pedido tp ON tp.id = p.id
+            LEFT JOIN tema_produto t ON t.id = prod.tema_produto_id
+            WHERE p.ativo = 1
+              AND (:tipoPedido IS NULL OR tp.tipo_pedido = :tipoPedido)
+              AND (:produtoId IS NULL OR pp.produto_id = :produtoId)
+              AND (:temaId IS NULL OR t.id = :temaId)
+            ORDER BY qtd_prod DESC
+            """, nativeQuery = true)
+    List<DashboardFiltroProdutoItem> findAllFiltered(
+            @Param("tipoPedido") String tipoPedido,
+            @Param("produtoId") Long produtoId,
+            @Param("temaId") Long temaId
+    );
 }
