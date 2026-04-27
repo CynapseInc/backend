@@ -71,6 +71,7 @@ FROM pedido AS p
 JOIN pedido_status_pedido psp ON psp.pedido_id = p.id
 JOIN status_pedido sp ON sp.id = psp.status_id
 WHERE p.ativo = 1
+  AND psp.status_atual = 1
 GROUP BY p.id, p.origem, p.observacoes, sp.status;
 
 -- ─────────────────────────────────────────────────────────────

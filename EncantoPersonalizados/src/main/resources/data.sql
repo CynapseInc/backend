@@ -842,30 +842,6 @@ WHERE M.tipo = 'Despesa'
 --  Dashboard de Gestão de Pedidos — todas as views
 -- ============================================================
 
-SET FOREIGN_KEY_CHECKS = 0;
-
-DROP TABLE IF EXISTS vw_tipo_pedido;
-DROP TABLE IF EXISTS vw_leadtime_funcionario;
-DROP TABLE IF EXISTS vw_retrabalho_quantidade_mes;
-DROP TABLE IF EXISTS vw_leadtime_etapa;
-DROP TABLE IF EXISTS vw_leadtime_mensal;
-DROP TABLE IF EXISTS vw_filtro_produto_item;
-DROP TABLE IF EXISTS vw_pedidos_mes;
-DROP TABLE IF EXISTS vw_carga_trabalho;
-DROP TABLE IF EXISTS vw_pedidos_sem_atualizacao;
-
-DROP VIEW IF EXISTS vw_tipo_pedido;
-DROP VIEW IF EXISTS vw_leadtime_funcionario;
-DROP VIEW IF EXISTS vw_retrabalho_quantidade_mes;
-DROP VIEW IF EXISTS vw_leadtime_etapa;
-DROP VIEW IF EXISTS vw_leadtime_mensal;
-DROP VIEW IF EXISTS vw_filtro_produto_item;
-DROP VIEW IF EXISTS vw_pedidos_mes;
-DROP VIEW IF EXISTS vw_carga_trabalho;
-DROP VIEW IF EXISTS vw_pedidos_sem_atualizacao;
-
-SET FOREIGN_KEY_CHECKS = 1;
-
 CREATE OR REPLACE VIEW vw_tipo_pedido AS
 SELECT
     p.id,
@@ -899,6 +875,7 @@ FROM pedido AS p
 JOIN pedido_status_pedido psp ON psp.pedido_id = p.id
 JOIN status_pedido sp ON sp.id = psp.status_id
 WHERE p.ativo = 1
+  AND psp.status_atual = 1
 GROUP BY p.id, p.origem, p.observacoes, sp.status;
 
 CREATE OR REPLACE VIEW vw_leadtime_funcionario AS
