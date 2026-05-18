@@ -1,7 +1,7 @@
 package school.sptech.EncantoPersonalizados.infrastructure.adapter;
 
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 import school.sptech.EncantoPersonalizados.core.application.gateway.FotoProdutoGateway;
 import school.sptech.EncantoPersonalizados.core.domain.FotoProduto;
@@ -13,42 +13,33 @@ import java.util.Optional;
 public class FotoProdutoRepositoryAdapter implements FotoProdutoGateway {
 
     private final FotoProdutoRepository repository;
-    private final CacheManager cacheManager;
 
-    public FotoProdutoRepositoryAdapter(FotoProdutoRepository repository, CacheManager cacheManager) {
+    public FotoProdutoRepositoryAdapter(FotoProdutoRepository repository) {
         this.repository = repository;
-        this.cacheManager = cacheManager;
     }
 
     @Override
+    @CacheEvict(cacheNames = "fotoProdutoById", key = "#foto.id", condition = "#foto.id != null")
     public FotoProduto save(FotoProduto foto) {
-        FotoProduto salvo = repository.save(foto);
-
-        // Evict cache da própria foto (fotoProdutoById) para manter a entrada atualizada
-        if (salvo.getId() != null) {
-            Cache fotoCache = cacheManager.getCache("fotoProdutoById");
-            if (fotoCache != null) fotoCache.evict(salvo.getId());
-        }
-
-        return salvo;
+        return repository.save(foto);
     }
 
     @Override
-    // Cache da foto individual: evita acesso ao DB para leituras frequentes de metadados/URL
-    @org.springframework.cache.annotation.Cacheable(cacheNames = "fotoProdutoById", key = "#id")
+    @Cacheable(cacheNames = "fotoProdutoById", key = "#id", unless = "#result == null")
     public Optional<FotoProduto> findById(Integer id) {
         return repository.findById(id);
     }
 
     @Override
+    public Optional<FotoProduto> findByIdUncached(Integer id) {
+        return repository.findById(id);
+    }
+
+    @Override
+    @CacheEvict(cacheNames = "fotoProdutoById", key = "#foto.id", condition = "#foto.id != null")
     public void delete(FotoProduto foto) {
-        repository.delete(foto);
-
-        // Evict cache da própria foto removida (fotoProdutoById)
         if (foto.getId() != null) {
-            Cache fotoCache = cacheManager.getCache("fotoProdutoById");
-            if (fotoCache != null) fotoCache.evict(foto.getId());
+            repository.deleteById(foto.getId());
         }
-
     }
 }
