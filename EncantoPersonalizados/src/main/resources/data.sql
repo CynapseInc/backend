@@ -74,7 +74,7 @@ INSERT IGNORE INTO status_pedido (id, status, cor, ordem_kanban, status_role, at
 (2, 'Em Produção', '#F4ACB7', 2, NULL, 1, NOW(), NOW()),
 (3, 'Finalizado', '#EAD2AC', 3, 'FINALIZADO', 1, NOW(), NOW()),
 (4, 'Entregue', '#D8E2DC', 4, 'ENTREGUE', 1, NOW(), NOW()),
-(4, 'Cancelado', '#E2ECE9', 4, 'CANCELADO', 1, NOW(), NOW());
+(5, 'Cancelado', '#E2ECE9', 5, 'CANCELADO', 1, NOW(), NOW());
 
 UPDATE status_pedido SET status_role = 'FINALIZADO' WHERE id = 3 AND status_role IS NULL;
 UPDATE status_pedido SET status_role = 'ENTREGUE' WHERE id = 4 AND status_role IS NULL;
